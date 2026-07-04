@@ -1,0 +1,22 @@
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+
+async function request(path, options = {}) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    headers: { "Content-Type": "application/json" },
+    ...options,
+  });
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status}`);
+  }
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+export const getRecipes = () => request("/api/recipes/");
+export const getRecipe = (id) => request(`/api/recipes/${id}`);
+export const createRecipe = (data) =>
+  request("/api/recipes/", { method: "POST", body: JSON.stringify(data) });
+export const updateRecipe = (id, data) =>
+  request(`/api/recipes/${id}`, { method: "PUT", body: JSON.stringify(data) });
+export const deleteRecipe = (id) =>
+  request(`/api/recipes/${id}`, { method: "DELETE" });
