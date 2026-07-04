@@ -1,43 +1,45 @@
-# レシピ管理システム（骨組み）
+# Recipe Management System (Skeleton)
 
-- フロント: React (Vite)
-- バックエンド: FastAPI
+This is a proof-of-concept project built with Claude Code, used to experiment with and evaluate its capabilities.
+
+- Frontend: React (Vite)
+- Backend: FastAPI
 - DB: MySQL
-- 環境: Docker Compose
+- Environment: Docker Compose
 
-## 起動方法
+## Running
 
 ```bash
 docker compose up --build
 ```
 
-- フロントエンド: http://localhost:5173
-- バックエンドAPI: http://localhost:8000
-- APIドキュメント: http://localhost:8000/docs
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+- API docs: http://localhost:8000/docs
 
-## 構成
+## Structure
 
 ```
 recipe/
 ├── backend/        # FastAPI
 │   └── app/
 │       ├── main.py
-│       ├── db/         # DB接続
-│       ├── models/     # SQLAlchemyモデル
-│       ├── schemas/    # Pydanticスキーマ
-│       ├── crud/       # DB操作
-│       └── routers/    # APIエンドポイント
+│       ├── db/         # DB connection
+│       ├── models/     # SQLAlchemy models
+│       ├── schemas/    # Pydantic schemas
+│       ├── crud/       # DB operations
+│       └── routers/    # API endpoints
 ├── frontend/       # React (Vite)
 │   └── src/
 ├── docker-compose.yml
 ```
 
-## 実装済みAPI（レシピCRUD）
+## Implemented API (recipe CRUD)
 
-- `GET /api/recipes/` 一覧取得
-- `GET /api/recipes/{id}` 詳細取得
-- `POST /api/recipes/` 新規作成
-- `PUT /api/recipes/{id}` 更新
-- `DELETE /api/recipes/{id}` 削除
+- `GET /api/recipes/` list
+- `GET /api/recipes/{id}` get one
+- `POST /api/recipes/` create
+- `PUT /api/recipes/{id}` update
+- `DELETE /api/recipes/{id}` delete
 
-まだ骨組みのみのため、認証・画像アップロード・カテゴリ分けなどは未実装です。
+This is still just a skeleton — auth, image upload, and categorization are not implemented yet.
