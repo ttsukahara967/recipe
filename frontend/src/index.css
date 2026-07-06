@@ -41,3 +41,35 @@ body {
 .error {
   color: #c0392b;
 }
+
+.admin-link {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.search-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.search-form input {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.form-actions,
+.item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}

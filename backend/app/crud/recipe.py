@@ -1,11 +1,30 @@
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.models.recipe import Recipe
 from app.schemas.recipe import RecipeCreate, RecipeUpdate
 
 
-def get_recipes(db: Session):
-    return db.query(Recipe).order_by(Recipe.id.desc()).all()
+def get_recipes(db: Session, page: int = 1, page_size: int = 10, q: str | None = None):
+    query = db.query(Recipe)
+    if q:
+        pattern = f"%{q}%"
+        query = query.filter(
+            or_(
+                Recipe.title.ilike(pattern),
+                Recipe.description.ilike(pattern),
+                Recipe.ingredients.ilike(pattern),
+                Recipe.steps.ilike(pattern),
+            )
+        )
+    total = query.count()
+    items = (
+        query.order_by(Recipe.id.desc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+        .all()
+    )
+    return items, total
 
 
 def get_recipe(db: Session, recipe_id: int):

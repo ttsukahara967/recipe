@@ -12,7 +12,11 @@ async function request(path, options = {}) {
   return res.json();
 }
 
-export const getRecipes = () => request("/api/recipes/");
+export const getRecipes = ({ page = 1, pageSize = 10, q = "" } = {}) => {
+  const params = new URLSearchParams({ page, page_size: pageSize });
+  if (q) params.set("q", q);
+  return request(`/api/recipes/?${params.toString()}`);
+};
 export const getRecipe = (id) => request(`/api/recipes/${id}`);
 export const createRecipe = (data) =>
   request("/api/recipes/", { method: "POST", body: JSON.stringify(data) });

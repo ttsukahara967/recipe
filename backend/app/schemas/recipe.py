@@ -24,3 +24,10 @@ class RecipeOut(RecipeBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
+
+class RecipeListOut(BaseModel):
+    items: list[RecipeOut]
+    total: int
+    page: int
+    page_size: int
