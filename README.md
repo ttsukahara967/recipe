@@ -36,10 +36,19 @@ recipe/
 
 ## Implemented API (recipe CRUD)
 
-- `GET /api/recipes/` list
+- `GET /api/recipes/` list (paginated, supports `q` text search)
 - `GET /api/recipes/{id}` get one
 - `POST /api/recipes/` create
 - `PUT /api/recipes/{id}` update
 - `DELETE /api/recipes/{id}` delete
+
+## Testing
+
+Tests run against a dedicated `recipe_test_db` database (created automatically alongside `recipe_db` when the `db` container starts, see `db-init/01_test_db.sql`). Test setup creates the tables, seeds fixture data per test, and drops the tables again afterward — the real `recipe_db` is never touched.
+
+```bash
+docker compose exec backend pip install -r requirements-dev.txt
+docker compose exec backend pytest
+```
 
 This is still just a skeleton — auth, image upload, and categorization are not implemented yet.
