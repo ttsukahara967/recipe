@@ -69,6 +69,7 @@ function AdminPage() {
   };
 
   const handleDelete = async (id) => {
+    if (!window.confirm("削除しますか？")) return;
     try {
       await deleteRecipe(id);
       if (editingId === id) handleCancelEdit();
