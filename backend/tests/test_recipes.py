@@ -77,6 +77,18 @@ def test_update_recipe(client, seed_recipes):
     assert res.json()["title"] == "カレーライス(改)"
 
 
+def test_update_recipe_only_changes_provided_fields(client, seed_recipes):
+    recipe_id = seed_recipes[0]
+    res = client.put(f"/api/recipes/{recipe_id}", json={"title": "更新タイトル"})
+
+    assert res.status_code == 200
+    data = res.json()
+    assert data["title"] == "更新タイトル"
+    assert data["description"] is not None
+    assert data["ingredients"] is not None
+    assert data["steps"] is not None
+
+
 def test_update_recipe_not_found(client):
     res = client.put("/api/recipes/99999", json={"title": "存在しない"})
     assert res.status_code == 404

@@ -1,3 +1,7 @@
+from datetime import datetime
+
+from typing import Optional
+
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -5,7 +9,7 @@ from app.models.recipe import Recipe
 from app.schemas.recipe import RecipeCreate, RecipeUpdate
 
 
-def get_recipes(db: Session, page: int = 1, page_size: int = 10, q: str | None = None):
+def get_recipes(db: Session, page: int = 1, page_size: int = 10, q: Optional[str] = None):
     query = db.query(Recipe)
     if q:
         pattern = f"%{q}%"
@@ -40,14 +44,34 @@ def create_recipe(db: Session, recipe: RecipeCreate):
 
 
 def update_recipe(db: Session, recipe_id: int, recipe: RecipeUpdate):
-    db_recipe = get_recipe(db, recipe_id)
-    if db_recipe is None:
+    existing_recipe = get_recipe(db, recipe_id)
+    if existing_recipe is None:
         return None
-    for key, value in recipe.model_dump().items():
-        setattr(db_recipe, key, value)
+
+    update_data = recipe.model_dump(exclude_unset=True)
+    if not update_data:
+        return None
+
+    merged_data = {
+        "title": update_data.get("title", existing_recipe.title),
+        "description": update_data.get("description", existing_recipe.description),
+        "ingredients": update_data.get("ingredients", existing_recipe.ingredients),
+        "steps": update_data.get("steps", existing_recipe.steps),
+    }
+
+    updated_count = (
+        db.query(Recipe)
+        .filter(Recipe.id == recipe_id)
+        .update(merged_data, synchronize_session=False)
+    )
+    if updated_count == 0:
+        return None
+
     db.commit()
-    db.refresh(db_recipe)
-    return db_recipe
+
+    now = datetime.utcnow()
+    updated_recipe = Recipe(id=recipe_id, created_at=now, updated_at=now, **merged_data)
+    return updated_recipe
 
 
 def delete_recipe(db: Session, recipe_id: int):

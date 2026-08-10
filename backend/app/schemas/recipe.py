@@ -1,13 +1,14 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
 
 class RecipeBase(BaseModel):
     title: str
-    description: str | None = None
-    ingredients: str | None = None
-    steps: str | None = None
+    description: Optional[str] = None
+    ingredients: Optional[str] = None
+    steps: Optional[str] = None
 
 
 class RecipeCreate(RecipeBase):

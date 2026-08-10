@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
@@ -12,7 +14,7 @@ router = APIRouter(prefix="/api/recipes", tags=["recipes"])
 def list_recipes(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
-    q: str | None = None,
+    q: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
     items, total = crud.get_recipes(db, page=page, page_size=page_size, q=q)
