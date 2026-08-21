@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from typing import Optional
 
 from sqlalchemy import or_
@@ -44,34 +42,16 @@ def create_recipe(db: Session, recipe: RecipeCreate):
 
 
 def update_recipe(db: Session, recipe_id: int, recipe: RecipeUpdate):
-    existing_recipe = get_recipe(db, recipe_id)
-    if existing_recipe is None:
-        return None
-
     update_data = recipe.model_dump(exclude_unset=True)
     if not update_data:
         return None
 
-    merged_data = {
-        "title": update_data.get("title", existing_recipe.title),
-        "description": update_data.get("description", existing_recipe.description),
-        "ingredients": update_data.get("ingredients", existing_recipe.ingredients),
-        "steps": update_data.get("steps", existing_recipe.steps),
-    }
-
-    updated_count = (
-        db.query(Recipe)
-        .filter(Recipe.id == recipe_id)
-        .update(merged_data, synchronize_session=False)
+    db.query(Recipe).filter(Recipe.id == recipe_id).update(
+        update_data, synchronize_session=False
     )
-    if updated_count == 0:
-        return None
-
     db.commit()
 
-    now = datetime.utcnow()
-    updated_recipe = Recipe(id=recipe_id, created_at=now, updated_at=now, **merged_data)
-    return updated_recipe
+    return get_recipe(db, recipe_id)
 
 
 def delete_recipe(db: Session, recipe_id: int):
